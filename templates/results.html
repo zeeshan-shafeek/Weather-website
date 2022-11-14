@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{city}} weather</title>
-</head>
-<body>
-<h1>hello!</h1>
-    <h2>Welcome to this simple weather website</h2>
+{% extends "base.html"%}
+{% block title %} {{city}} weather {% endblock %}
+{% block content %}
     <p> City: {{city}} <br>
         {% if unit == "imperial" %}
             Temp: {{temp}} °F</p>
         {% else %}
             Temp: {{temp}} °C </p>
         {% endif %}
-
-</body>
-</html>
+{% endblock %}
+{%block heading %} {{city}} results: {% endblock %}

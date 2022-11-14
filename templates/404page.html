@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>404 not found</title>
-</head>
-<body>
-<h1> City not found!</h1>
+{% extends "base.html"%}
+{% block title %} 404 not found {% endblock %}
+{%block heading %} City not found! {% endblock %}
+{% block content %}
 <p> {{city}} not found! Make sure you didn't make a typo</p>
-
-</body>
-</html>
+{% endblock %}

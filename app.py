@@ -20,8 +20,13 @@ def home():
     # '''
 
 
-@app.route('/<city>/<unit>')
+@app.route('/<city>/<unit>', methods=["POST", "GET"])
 def get_weather(city, unit):
+    if request.method == "POST":
+        city = request.form['city']
+        unit = request.form['unit']
+        return redirect(url_for("get_weather", city=city, unit=unit))
+
     result = Weather.WeatherApp(city, unit)
     if result.status != 'City not found!':
         return render_template("results.html", city=city, unit=unit, temp=result.check_temp())
