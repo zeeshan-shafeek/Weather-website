@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=["POST", "GET"])
 def home():
-    if request.method == "POST" and request.form["city"] != '' and request.form['unit'] != '':
+    if request.method == "POST":
         city = request.form['city']
         unit = request.form['unit']
         return redirect(url_for("get_weather", city=city, unit=unit))
