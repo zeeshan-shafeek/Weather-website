@@ -10,10 +10,14 @@
 {% block content %} {% endblock %}
     <h2>{%block heading2 %}{% endblock %}</h2>
 <h2>=================================</h2>
-    <p> Please enter the city to get its weather </p>
+    <p> Please select a city to get its weather </p>
 <form action= "#" method="post">
   <label for="city">City:</label><br>
-  <input type="text" id="city" name="city" required><br>
+  <SELECT name="city">
+{% for c in city_list %}
+    <OPTION value={{c.cities}}>{{c.cities}}</option>
+{% endfor %}
+</SELECT><br>
 
     <p>Select units you want:</p>
   <input type="radio" id="imperial" name="unit" value="imperial" required>
