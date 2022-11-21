@@ -1,19 +1,41 @@
-# import urllib library
-from urllib.request import urlopen
+from datetime import datetime
 
-# import json
-import json
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-# store the URL in url as
-# parameter for urlopen
-url = "https://bulk.openweathermap.org/sample/city.list.json.gz"
+app = Flask(__name__)
 
-# store the response of URL
-print(urlopen(url))
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
-# # storing the JSON response
-# # from url in data
-# data_json = json.loads(response.read())
-#
-# # print the json response
-# print(data_json)
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    location = db.Column(db.String(50))
+    date_created = db.Column(db.DateTime, default=datetime.now)
+
+@app.route('/<name>/<location>')
+def index(name, location):
+    user = User(name=name, location=location)
+    db.session.add(user)
+    db.session.commit()
+
+    return '<h1>Added New User!</h1>'
+
+@app.route('/<name>')
+def get_user(name):
+    user = User.query.filter_by(name=name).first()
+
+    return f'<h1>The user is located in: { user.location }</h1>'
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    db.create_all()
+    user = User(name="something", location="anything")
+    db.session.add(user)
+    db.session.commit()
+
+
+

@@ -1,4 +1,9 @@
 {% extends "base.html"%}
 {% block content %}
-<p> this page will help you add another city to database</p>
+ <p> Please enter the city you want added to the Database:</p>
+<form action= "/" method="post">
+  <label for="city">City:</label><br>
+  <input type="text" id="city" name="city" required><br>
+    <input type="submit" value="Add!">
+    </form>
 {% endblock %}

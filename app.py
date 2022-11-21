@@ -1,9 +1,9 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, flash, session
 import Weather
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-
+app.secret_key = "123"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cities.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -18,15 +18,15 @@ class Cities(db.Model):
         self.cities = city
 
 
-
-
-
-
 @app.route('/', methods=["POST", "GET"])
 def home():
     if request.method == "POST":
         city = request.form['city']
-        unit = request.form['unit']
+        try:
+            unit = request.form['unit']
+        except KeyError:
+            flash("City added!")
+            return render_template("search.html")
         return redirect(url_for("get_weather", city=city, unit=unit))
     else:
         return render_template("search.html")
@@ -40,7 +40,6 @@ def home():
 
 @app.route('/<city>/<unit>', methods=["POST", "GET"])
 def get_weather(city, unit):
-    city = ''
     if request.method == "POST":
         city = request.form['city']
         unit = request.form['unit']
@@ -55,6 +54,7 @@ def get_weather(city, unit):
 
 @app.route('/addcity/', methods=["POST", "GET"])
 def add_city():
+    session.pop('_flashes', None)
     return render_template("addcity.html")
 
 
