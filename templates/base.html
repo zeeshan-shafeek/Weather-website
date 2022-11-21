@@ -9,6 +9,7 @@
 <h1>{%block heading %}{% endblock %}</h1>
 {% block content %} {% endblock %}
     <h2>{%block heading2 %}{% endblock %}</h2>
+<h2>=================================</h2>
     <p> Please enter the city to get its weather </p>
 <form action= "#" method="post">
   <label for="city">City:</label><br>
@@ -21,6 +22,13 @@
   <label for="metric">Metric</label><br>
   <input type="submit" value="Go!">
 </form>
+<p>
 
+</p>
+
+<form action= "/addcity/" method="post">
+    <label> Don't see your city listed? Add it!</label><br>
+    <input type="submit" value="Add City!">
+</form>
 </body>
 </html>

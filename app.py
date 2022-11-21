@@ -1,7 +1,25 @@
 from flask import Flask, redirect, url_for, render_template, request
 import Weather
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cities.sqlite3'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+
+class Cities(db.Model):
+    _id = db.Column("id", db.Integer, primary_key=True)
+    cities = db.Column(db.String(50))
+
+    def __init__(self, city):
+        self.cities = city
+
+
+
+
 
 
 @app.route('/', methods=["POST", "GET"])
@@ -22,6 +40,7 @@ def home():
 
 @app.route('/<city>/<unit>', methods=["POST", "GET"])
 def get_weather(city, unit):
+    city = ''
     if request.method == "POST":
         city = request.form['city']
         unit = request.form['unit']
@@ -34,7 +53,13 @@ def get_weather(city, unit):
         return render_template("404page.html", city=city)
 
 
+@app.route('/addcity/', methods=["POST", "GET"])
+def add_city():
+    return render_template("addcity.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+    db.create_all()
 
 # print("File r __name__ is set to: {}".format(__name__))
