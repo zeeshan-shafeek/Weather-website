@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%block title %} {% endblock %}</title>
+
+</head>
+<body>
+<h1>{%block heading %}{% endblock %}</h1>
+{% block content %} {% endblock %}
+    <h2>{%block heading2 %}{% endblock %}</h2>
+<h2>=================================</h2>
+    <p> Please select a city to get its weather </p>
+<form action= "#" method="post">
+  <label for="city">City:</label><br>
+  <SELECT name="city">
+{% for c in city_list %}
+    <OPTION value={{c.cities}}>{{c.cities}}</option>
+{% endfor %}
+</SELECT><br>
+
+    <p>Select units you want:</p>
+  <input type="radio" id="imperial" name="unit" value="imperial" required>
+  <label for="imperial">Imperial</label><br>
+  <input type="radio" id="metric" name="unit" value="metric">
+  <label for="metric">Metric</label><br>
+  <input type="submit" value="Go!">
+</form>
+<p>
+
+</p>
+
+<form action= "/addcity/" method="post">
+    <label> Don't see your city listed? Add it!</label><br>
+    <input type="submit" value="Add City!">
+</form>
+</body>
+</html>

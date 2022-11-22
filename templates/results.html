@@ -1,0 +1,11 @@
+{% extends "base.html"%}
+{% block title %} {{city}} weather {% endblock %}
+{% block content %}
+    <p> City: {{city}} <br>
+        {% if unit == "imperial" %}
+            Temp: {{temp}} °F</p>
+        {% else %}
+            Temp: {{temp}} °C </p>
+        {% endif %}
+{% endblock %}
+{%block heading %} {{city}} results: {% endblock %}
