@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request, flash, ses
 import Weather
 from flask_sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__)
 app.secret_key = "123"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cities.sqlite3'
@@ -25,7 +26,8 @@ def home():
         try:
             unit = request.form['unit']
         except KeyError:
-            found_city = Cities.query.filter_by(cities=city).first()
+            dbcity = Weather.WeatherApp(city, "imperial").city
+            found_city = Cities.query.filter_by(cities=dbcity).first()
             if found_city:
                 flash("city already added!")
             else:
@@ -33,7 +35,7 @@ def home():
                 if test_city.status == 'City not found!':
                     flash("Not a valid city")
                     return render_template("search.html", city_list=Cities.query.all())
-                citi = Cities(city)
+                citi = Cities(dbcity)
                 db.session.add(citi)
                 db.session.commit()
                 flash("City added!")
@@ -52,7 +54,8 @@ def get_weather(city, unit):
 
     result = Weather.WeatherApp(city, unit)
     if result.status != 'City not found!':
-        return render_template("results.html", city=city, unit=unit, temp=result.check_temp(), city_list=Cities.query.all())
+        return render_template("results.html", city=city, unit=unit, temp=result.check_temp(),
+                               city_list=Cities.query.all())
     else:
         return render_template("404page.html", city=city, city_list=Cities.query.all())
 

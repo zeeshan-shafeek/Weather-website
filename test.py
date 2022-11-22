@@ -1,41 +1,14 @@
-from datetime import datetime
+from re import sub
 
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-
-db = SQLAlchemy(app)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    location = db.Column(db.String(50))
-    date_created = db.Column(db.DateTime, default=datetime.now)
-
-@app.route('/<name>/<location>')
-def index(name, location):
-    user = User(name=name, location=location)
-    db.session.add(user)
-    db.session.commit()
-
-    return '<h1>Added New User!</h1>'
-
-@app.route('/<name>')
-def get_user(name):
-    user = User.query.filter_by(name=name).first()
-
-    return f'<h1>The user is located in: { user.location }</h1>'
-
-if __name__ == "__main__":
-    app.run(debug=True)
-    db.create_all()
-    user = User(name="something", location="anything")
-    db.session.add(user)
-    db.session.commit()
+def camel_case(s):
+  s = sub(r"(_|-)+", " ", s).title().replace(" ", "")
+  return ''.join([s[0].lower(), s[1:]])
 
 
-
+print(camel_case('JavaScript'))
+print(camel_case('Foo-Bar'))
+print(camel_case('foo_bar'))
+print(camel_case('--foo.bar'))
+print(camel_case('Foo-BAR'))
+print(camel_case('fooBAR'))
+print(camel_case('foo bar'))
