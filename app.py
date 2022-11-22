@@ -26,8 +26,8 @@ def home():
         try:
             unit = request.form['unit']
         except KeyError:
-            dbcity = Weather.WeatherApp(city, "imperial").city
-            found_city = Cities.query.filter_by(cities=dbcity).first()
+            db_city = Weather.WeatherApp(city, "imperial").city
+            found_city = Cities.query.filter_by(cities=db_city).first()
             if found_city:
                 flash("city already added!")
             else:
@@ -35,7 +35,7 @@ def home():
                 if test_city.status == 'City not found!':
                     flash("Not a valid city")
                     return render_template("search.html", city_list=Cities.query.all())
-                citi = Cities(dbcity)
+                citi = Cities(db_city)
                 db.session.add(citi)
                 db.session.commit()
                 flash("City added!")
@@ -60,10 +60,10 @@ def get_weather(city, unit):
         return render_template("404page.html", city=city, city_list=Cities.query.all())
 
 
-@app.route('/addcity/', methods=["POST", "GET"])
+@app.route('/add-city/', methods=["POST", "GET"])
 def add_city():
     session.pop('_flashes', None)
-    return render_template("addcity.html", city_list=Cities.query.all())
+    return render_template("add-city.html", city_list=Cities.query.all())
 
 
 if __name__ == "__main__":
