@@ -1,11 +1,12 @@
 {% extends "base.html"%}
 {% block title %} {{city}} weather {% endblock %}
 {% block content %}
-    <p> City: {{city}} <br>
+    <p> City: {{city}}, {{country}} <br>
         {% if unit == "imperial" %}
             Temp: {{temp}} °F</p>
         {% else %}
             Temp: {{temp}} °C </p>
         {% endif %}
+<p>Avg temperature in {{country}}: {{country_temp}} °C</p>
 {% endblock %}
 {%block heading %} {{city}} results: {% endblock %}

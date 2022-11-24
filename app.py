@@ -10,21 +10,20 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-class Cities(db.Model):
-    _id = db.Column("id", db.Integer, primary_key=True)
-    cities = db.Column(db.String(50))
-    temp = db.Column(db.float)
-    country_id = db.column(db.integer, db.ForeignKey('countries.id'))
-
-
 class Countries(db.Model):
-    _id = db.Column("id", db.Integer, primary_key=True)
-    Countries = db.Column(db.String(50))
-    temp = db.Column(db.float)
-    cities = db.relationship('Cities', backref='country')
+    id = db.Column(db.Integer, primary_key=True)
+    countries = db.Column(db.String(50))
+    cities = db.relationship('Cities', backref='countries')
 
-    def __init__(self, city):
-        self.cities = city
+
+class Cities(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cities = db.Column(db.String(50))
+    temp = db.Column(db.Float)
+    countries_id = db.Column(db.Integer, db.ForeignKey('countries.id'))
+
+    # def __init__(self, city):
+    #     self.cities = city
 
 
 @app.route('/', methods=["POST", "GET"])
@@ -34,16 +33,26 @@ def home():
         try:
             unit = request.form['unit']
         except KeyError:
-            db_city = Weather.WeatherApp(city, "imperial").city
+            result = Weather.WeatherApp(city, "metric")
+            if result.status == 'City not found!':
+                flash("Not a valid city")
+                return render_template("search.html", city_list=Cities.query.all())
+            db_city = result.city
+            db_country = result.country
+            db_temp = result.temp
+
             found_city = Cities.query.filter_by(cities=db_city).first()
             if found_city:
                 flash("city already added!")
             else:
-                test_city = Weather.WeatherApp(city, "imperial")
-                if test_city.status == 'City not found!':
-                    flash("Not a valid city")
-                    return render_template("search.html", city_list=Cities.query.all())
-                citi = Cities(db_city)
+                countri = Countries.query.filter_by(countries=db_country).first()
+                if countri:
+                    pass
+                else:
+                    countri = Countries(countries=db_country)
+                    db.session.add(countri)
+                    db.session.commit()
+                citi = Cities(cities=db_city, countries=countri, temp=db_temp)
                 db.session.add(citi)
                 db.session.commit()
                 flash("City added!")
@@ -62,7 +71,17 @@ def get_weather(city, unit):
 
     result = Weather.WeatherApp(city, unit)
     if result.status != 'City not found!':
-        return render_template("results.html", city=city, unit=unit, temp=result.check_temp(),
+        cities = Cities.query.filter_by(cities=city).first()
+        country = Countries.query.filter_by(countries=cities.countries.countries).first()
+        all_city = country.cities
+        country_temp = 0.0
+        for c in all_city:
+            country_temp += c.temp
+        country_temp = country_temp/len(all_city)
+        print(country_temp)
+        return render_template("results.html", city=city, unit=unit, country=cities.countries.countries,
+                               temp=result.check_temp(),
+                               country_temp=country_temp,
                                city_list=Cities.query.all())
     else:
         return render_template("404page.html", city=city, city_list=Cities.query.all())

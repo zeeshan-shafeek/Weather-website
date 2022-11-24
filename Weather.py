@@ -16,6 +16,7 @@ class WeatherApp:
         try:
             self.city = self.reply.json()['name']
             self.country = self.reply.json()['sys']['country']
+            self.temp = float(self.reply.json()['main']['temp'])
         except KeyError:
             pass
         if self.reply.status_code != 200:
@@ -26,4 +27,4 @@ class WeatherApp:
 
     def check_temp(self):
         self.request_data()
-        return self.reply.json()['main']['temp']
+        return self.temp
