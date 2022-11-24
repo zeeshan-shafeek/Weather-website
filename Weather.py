@@ -15,6 +15,7 @@ class WeatherApp:
         self.reply = requests.get(f"{self.url}{self.city}&appid={self.api_key}&units={self.units}")
         try:
             self.city = self.reply.json()['name']
+            self.country = self.reply.json()['sys']['country']
         except KeyError:
             pass
         if self.reply.status_code != 200:

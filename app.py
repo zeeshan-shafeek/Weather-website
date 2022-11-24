@@ -2,7 +2,6 @@ from flask import Flask, redirect, url_for, render_template, request, flash, ses
 import Weather
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__)
 app.secret_key = "123"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cities.sqlite3'
@@ -14,6 +13,15 @@ db = SQLAlchemy(app)
 class Cities(db.Model):
     _id = db.Column("id", db.Integer, primary_key=True)
     cities = db.Column(db.String(50))
+    temp = db.Column(db.float)
+    country_id = db.column(db.integer, db.ForeignKey('countries.id'))
+
+
+class Countries(db.Model):
+    _id = db.Column("id", db.Integer, primary_key=True)
+    Countries = db.Column(db.String(50))
+    temp = db.Column(db.float)
+    cities = db.relationship('Cities', backref='country')
 
     def __init__(self, city):
         self.cities = city
