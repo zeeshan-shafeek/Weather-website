@@ -36,7 +36,7 @@ def home():
             result = Weather.WeatherApp(city, "metric")
             if result.status == 'City not found!':
                 flash("Not a valid city")
-                return render_template("search.html", city_list=Cities.query.all())
+                return render_template("search.html", city_list=Countries.query.all())
             db_city = result.city
             db_country = result.country
             db_temp = result.temp
@@ -56,10 +56,10 @@ def home():
                 db.session.add(citi)
                 db.session.commit()
                 flash("City added!")
-            return render_template("search.html", city_list=Cities.query.all())
-        return redirect(url_for("get_weather", city=city, unit=unit, city_list=Cities.query.all()))
+            return render_template("search.html", city_list=Countries.query.all())
+        return redirect(url_for("get_weather", city=city, unit=unit, city_list=Countries.query.all()))
     else:
-        return render_template("search.html", city_list=Cities.query.all())
+        return render_template("search.html", city_list=Countries.query.all())
 
 
 @app.route('/<city>/<unit>', methods=["POST", "GET"])
@@ -67,7 +67,7 @@ def get_weather(city, unit):
     if request.method == "POST":
         city = request.form['city']
         unit = request.form['unit']
-        return redirect(url_for("get_weather", city=city, unit=unit, city_list=Cities.query.all()))
+        return redirect(url_for("get_weather", city=city, unit=unit, city_list=Countries.query.all()))
 
     result = Weather.WeatherApp(city, unit)
     if result.status != 'City not found!':
@@ -82,15 +82,15 @@ def get_weather(city, unit):
         return render_template("results.html", city=city, unit=unit, country=cities.countries.countries,
                                temp=result.check_temp(),
                                country_temp=country_temp,
-                               city_list=Cities.query.all())
+                               city_list=Countries.query.all())
     else:
-        return render_template("404page.html", city=city, city_list=Cities.query.all())
+        return render_template("404page.html", city=city, city_list=Countries.query.all())
 
 
 @app.route('/add-city/', methods=["POST", "GET"])
 def add_city():
     session.pop('_flashes', None)
-    return render_template("add-city.html", city_list=Cities.query.all())
+    return render_template("add-city.html", city_list=Countries.query.all())
 
 
 if __name__ == "__main__":

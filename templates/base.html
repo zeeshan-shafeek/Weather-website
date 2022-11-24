@@ -33,7 +33,11 @@ function myFunction1() {
   <label>Please select a city to get its weather:</label><br>
   <SELECT name="city">
 {% for c in city_list %}
-    <OPTION value="{{c.cities}}">{{c.cities}}</option>
+      <optgroup label={{c.countries}}>
+          {% for d in c.cities %}
+            <option value="{{d.cities}}">{{d.cities}}</option>
+          {% endfor %}
+      </optgroup>
 {% endfor %}
 </SELECT><br>
 
